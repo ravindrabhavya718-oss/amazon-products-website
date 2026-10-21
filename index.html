@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="p:amazon products" content=""/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A clean, independent collection of useful products and buying tips across every category.">
+  <title>Amazon Products — Product Picks</title>
+  <style>
+    :root {
+      --ink: #202521;
+      --muted: #707872;
+      --brand: #245b45;
+      --brand-hover: #194632;
+      --line: #e5e9e5;
+      --paper: #ffffff;
+      --background: #f8f9f7;
+      --soft: #f0f4f0;
+      --warning: #fff7e7;
+      --warning-ink: #6f4d13;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--background); color: var(--ink); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; line-height: 1.55; }
+    a { color: inherit; }
+    .container { width: min(1060px, calc(100% - 36px)); margin: 0 auto; }
+    .notice { padding: 9px 16px; text-align: center; background: var(--warning); color: var(--warning-ink); border-bottom: 1px solid #f0e1bd; font-size: 12px; }
+    header { background: var(--paper); border-bottom: 1px solid var(--line); }
+    .nav { min-height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .brand { text-decoration: none; font-weight: 800; font-size: 19px; letter-spacing: -.7px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; }
+    .brand-logo { width: 38px; height: 38px; object-fit: contain; border-radius: 8px; }
+    .brand-name { color: var(--ink); }
+    .brand-name b { color: #f39a16; font-weight: 850; }
+    .brand span { color: inherit; }
+    .brand span { color: var(--brand); }
+    nav { display: flex; gap: 24px; }
+    nav a { text-decoration: none; color: var(--muted); font-size: 14px; }
+    nav a:hover { color: var(--brand); }
+    .hero { padding: 58px 0 40px; }
+    .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 750; color: var(--brand); }
+    h1 { max-width: 700px; font-size: clamp(36px, 6vw, 58px); line-height: 1.08; letter-spacing: -2.6px; margin: 12px 0 15px; }
+    .hero p { max-width: 630px; color: var(--muted); font-size: 16px; margin: 0; }
+    .hero-link { display: inline-block; margin-top: 22px; background: var(--brand); color: white; padding: 11px 16px; border-radius: 9px; text-decoration: none; font-size: 14px; font-weight: 700; }
+    .hero-link:hover { background: var(--brand-hover); }
+    .section { padding: 26px 0 50px; }
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 18px; }
+    h2 { font-size: 24px; letter-spacing: -.7px; margin: 0; }
+    .subtext { color: var(--muted); font-size: 14px; margin: 5px 0 0; }
+    .tools { display: flex; align-items: center; gap: 10px; margin: 22px 0 20px; flex-wrap: wrap; }
+    input[type="search"] { flex: 1 1 240px; width: 100%; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; outline-offset: 2px; }
+    .filters { display: flex; gap: 7px; flex-wrap: wrap; }
+    .filter { border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 99px; padding: 8px 12px; cursor: pointer; font: inherit; font-size: 13px; }
+    .filter.active, .filter:hover { background: var(--brand); color: white; border-color: var(--brand); }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
+    .product { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+    .product-image { width: 100%; height: 190px; display: grid; place-items: center; object-fit: contain; background: var(--soft); color: var(--muted); font-size: 46px; }
+    .product-image img { width: 100%; height: 100%; object-fit: contain; }
+    .product-content { padding: 17px; display: flex; flex-direction: column; flex: 1; align-items: flex-start; }
+    .category { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; font-weight: 800; color: var(--brand); }
+    .product h3 { margin: 7px 0 6px; font-size: 17px; line-height: 1.35; letter-spacing: -.25px; }
+    .description { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+    .price { font-weight: 750; font-size: 15px; margin: 0 0 13px; }
+    .product-link { display: inline-flex; margin-top: auto; text-decoration: none; background: var(--brand); color: #fff; padding: 10px 13px; border-radius: 8px; font-weight: 700; font-size: 13px; }
+    .product-link:hover { background: var(--brand-hover); }
+    .empty { grid-column: 1 / -1; text-align: center; padding: 38px 16px; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); background: var(--paper); }
+    .guides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .guide { border: 1px solid var(--line); background: var(--paper); border-radius: var(--radius); padding: 20px; }
+    .guide h3 { margin: 0 0 7px; font-size: 16px; }
+    .guide p { color: var(--muted); font-size: 13px; margin: 0; }
+    .disclosure { border-radius: var(--radius); padding: 23px; background: #edf3ee; border: 1px solid #dce7de; }
+    .disclosure h2 { font-size: 20px; margin-bottom: 9px; }
+    .disclosure p { margin: 0; font-size: 13px; color: #43564a; }
+    footer { padding: 24px 0 30px; margin-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer a { text-decoration: none; }
+    [hidden] { display: none !important; }
+    @media (max-width: 760px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .product-image { height: 165px; } .guides { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) { .container { width: min(100% - 26px, 1060px); } .nav { min-height: 60px; } nav { gap: 12px; } nav a { font-size: 12px; } .hero { padding: 42px 0 25px; } h1 { letter-spacing: -1.6px; } .grid { grid-template-columns: 1fr; } .product-image { height: 210px; } .section-heading { display: block; } }
+  </style>
+</head>
+<body>
+  <div class="notice">Disclosure: As an Amazon Associate I earn from qualifying purchases. Product links must be your own tagged links before you publish them.</div>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#top"><img class="brand-logo" src="logo.png" alt="" aria-hidden="true"> <span class="brand-name">amazon <b>products</b></span></a>
+      <nav aria-label="Main navigation"><a href="#products">Products</a><a href="#guides">Buying tips</a><a href="#about">About</a></nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow">A collection of useful finds</div>
+        <h1>Good products. Clear choices.</h1>
+        <p>Discover handpicked items across tech, home, fashion, books, beauty, and everyday life. Simple recommendations to help you decide what is worth a closer look.</p>
+        <a class="hero-link" href="#products">Browse all products ↓</a>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="container">
+        <div class="section-heading">
+          <div><h2>Product collection</h2><p class="subtext">A changing collection of things worth exploring.</p></div>
+        </div>
+        <div class="tools">
+          <input id="search" type="search" placeholder="Search products..." aria-label="Search products">
+          <div class="filters" id="filters" aria-label="Filter by category">
+            <button class="filter active" type="button" data-category="All">All</button>
+            <button class="filter" type="button" data-category="Tech">Tech</button>
+            <button class="filter" type="button" data-category="Home">Home</button>
+            <button class="filter" type="button" data-category="Fashion">Fashion</button>
+            <button class="filter" type="button" data-category="Books">Books</button>
+            <button class="filter" type="button" data-category="Other">Other</button>
+          </div>
+        </div>
+        <div class="grid" id="productGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="guides">
+      <div class="container">
+        <div class="section-heading"><div><h2>Before you buy</h2><p class="subtext">A few useful checks for any category.</p></div></div>
+        <div class="guides">
+          <article class="guide"><h3>Check the details</h3><p>Confirm size, compatibility, materials, included accessories, and seller information.</p></article>
+          <article class="guide"><h3>Compare the full cost</h3><p>Consider delivery, warranty, return conditions, and replacement costs—not only the displayed price.</p></article>
+          <article class="guide"><h3>Read current information</h3><p>Prices, stock, and product specifications can change. Verify the latest details on the retailer's page.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="disclosure">
+          <h2>Affiliate disclosure</h2>
+          <p>As an Amazon Associate I earn from qualifying purchases. This is an independent website and is not owned by or endorsed by Amazon. Add a clear disclosure such as “(paid link)” close to each affiliate link. Only use your own valid, tagged affiliate links and product images/content permitted by the program rules.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© <span id="year"></span> Amazon Products. Independent product collection.</span>
+      <span><a href="#about">About & disclosure</a> · <a href="#top">Back to top ↑</a></span>
+    </div>
+  </footer>
+
+  <script>
+    /*
+      HOW TO ADD A PRODUCT:
+      1. Copy one product object below.
+      2. Change its id, name, category, description, price, image and url.
+      3. Use a category name you like; new categories are automatically shown as filters.
+      4. Replace url with your own valid Amazon Associates tagged link when available.
+      5. Commit this file to GitHub. GitHub Pages will publish the change.
+      Use an image URL you have permission to use. Do not invent prices or reviews.
+    */
+    const products = [
+      {
+        id: "sample-earbuds",
+        name: "Example: Wireless Earbuds",
+        category: "Tech",
+        description: "Replace this sample with your own short, honest product description.",
+        price: "",
+        image: "",
+        url: ""
+      },
+      {
+        id: "sample-desk-lamp",
+        name: "Example: Desk Lamp",
+        category: "Home",
+        description: "Add useful details that help visitors understand who this product may suit.",
+        price: "",
+        image: "",
+        url: ""
+      },
+      {
+        id: "sample-backpack",
+        name: "Example: Everyday Backpack",
+        category: "Fashion",
+        description: "You can add products from any category, not just the examples shown here.",
+        price: "",
+        image: "",
+        url: ""
+      }
+    ];
+
+    const grid = document.getElementById("productGrid");
+    const searchInput = document.getElementById("search");
+    const filters = document.getElementById("filters");
+    let activeCategory = "All";
+
+    function safeText(value) {
+      return String(value ?? "");
+    }
+
+    function makeProductCard(product) {
+      const card = document.createElement("article");
+      card.className = "product";
+      card.dataset.category = product.category || "Other";
+      card.dataset.search = [product.name, product.category, product.description].join(" ").toLowerCase();
+
+      const imageBox = document.createElement("div");
+      imageBox.className = "product-image";
+      imageBox.setAttribute("aria-label", product.name || "Product image");
+
+      if (product.image && /^https:\/\/.+/i.test(product.image)) {
+        const img = document.createElement("img");
+        img.src = product.image;
+        img.alt = safeText(product.name);
+        img.loading = "lazy";
+        img.onerror = () => { imageBox.textContent = "◇"; };
+        imageBox.appendChild(img);
+      } else {
+        imageBox.textContent = "◇";
+      }
+
+      const body = document.createElement("div");
+      body.className = "product-content";
+
+      const category = document.createElement("div");
+      category.className = "category";
+      category.textContent = safeText(product.category || "Other");
+
+      const name = document.createElement("h3");
+      name.textContent = safeText(product.name);
+
+      const description = document.createElement("p");
+      description.className = "description";
+      description.textContent = safeText(product.description);
+
+      body.append(category, name, description);
+
+      if (product.price) {
+        const price = document.createElement("p");
+        price.className = "price";
+        price.textContent = safeText(product.price);
+        body.appendChild(price);
+      }
+
+      const link = document.createElement("a");
+      link.className = "product-link";
+      const validLink = typeof product.url === "string" && /^https:\/\/[^\s]+$/i.test(product.url);
+      if (validLink) {
+        link.href = product.url;
+        link.target = "_blank";
+        link.rel = "sponsored nofollow noopener noreferrer";
+        link.textContent = "View product ↗";
+        link.setAttribute("aria-label", "View " + safeText(product.name));
+      } else {
+        link.href = "#products";
+        link.textContent = "Link coming soon";
+        link.setAttribute("aria-disabled", "true");
+        link.style.opacity = ".65";
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          alert("This sample has no product link yet. Add your own valid tagged affiliate URL in the products list.");
+        });
+      }
+      body.appendChild(link);
+      card.append(imageBox, body);
+      return card;
+    }
+
+    function refreshCategoryFilters() {
+      const categories = [...new Set(products.map(p => p.category || "Other"))];
+      const allCategories = ["All", ...categories];
+      filters.replaceChildren();
+      allCategories.forEach(category => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "filter" + (category === activeCategory ? " active" : "");
+        button.dataset.category = category;
+        button.textContent = category;
+        filters.appendChild(button);
+      });
+    }
+
+    function renderProducts() {
+      grid.replaceChildren();
+      const term = searchInput.value.trim().toLowerCase();
+      const matching = products.filter(product => {
+        const matchesCategory = activeCategory === "All" || (product.category || "Other") === activeCategory;
+        const haystack = [product.name, product.category, product.description].join(" ").toLowerCase();
+        return matchesCategory && haystack.includes(term);
+      });
+      if (!matching.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No products found. Try another search or category.";
+        grid.appendChild(empty);
+        return;
+      }
+      matching.forEach(product => grid.appendChild(makeProductCard(product)));
+    }
+
+    filters.addEventListener("click", event => {
+      const button = event.target.closest("button[data-category]");
+      if (!button) return;
+      activeCategory = button.dataset.category;
+      [...filters.querySelectorAll("button")].forEach(item => item.classList.toggle("active", item === button));
+      renderProducts();
+    });
+    searchInput.addEventListener("input", renderProducts);
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    refreshCategoryFilters();
+    renderProducts();
+  </script>
+</body>
+</html>
