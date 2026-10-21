@@ -1,0 +1,6 @@
+backend/.env
+backend/.env.*
+!backend/.env.example
+node_modules/
+backend/vendor/creatorsapi-nodejs-sdk/node_modules/
+backend/vendor/creatorsapi-nodejs-sdk/dist/

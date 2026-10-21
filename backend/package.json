@@ -1,0 +1,14 @@
+{
+  "name": "amazon-products-creators-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Private server-side Amazon Creators API product importer",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "build:sdk": "npm --prefix vendor/creatorsapi-nodejs-sdk install --include=dev --ignore-scripts && npm --prefix vendor/creatorsapi-nodejs-sdk run build && npm --prefix vendor/creatorsapi-nodejs-sdk prune --omit=dev",
+    "start": "node server.js",
+    "test": "node --test"
+  }
+}

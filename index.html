@@ -49,6 +49,29 @@
     h2 { font-size: 24px; letter-spacing: -.7px; margin: 0; }
     .subtext { color: var(--muted); font-size: 14px; margin: 5px 0 0; }
     .tools { display: flex; align-items: center; gap: 10px; margin: 22px 0 20px; flex-wrap: wrap; }
+    .import-panel { margin: 20px 0 24px; padding: 19px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+    .import-panel h3 { margin: 0 0 5px; font-size: 17px; }
+    .import-panel > p { margin: 0 0 14px; color: var(--muted); font-size: 13px; }
+    .import-form { display: flex; align-items: end; gap: 10px; flex-wrap: wrap; }
+    .import-field { display: grid; gap: 5px; flex: 1 1 280px; }
+    .import-field label { font-size: 12px; font-weight: 700; }
+    .import-field input { width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; }
+    .import-button, .import-secondary { border: 0; border-radius: 8px; padding: 11px 14px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
+    .import-button { background: var(--brand); color: white; }
+    .import-button:hover { background: var(--brand-hover); }
+    .import-secondary { border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+    .import-button:disabled { opacity: .6; cursor: wait; }
+    .import-status { min-height: 1.5em; margin: 10px 0 0 !important; color: var(--muted); font-size: 13px; }
+    .import-status[data-state="error"] { color: #a33125; }
+    .import-preview { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .import-preview-image { width: 120px; height: 120px; object-fit: contain; background: var(--soft); border-radius: 8px; }
+    .import-image-missing { width: 120px; min-height: 120px; display: grid; place-items: center; padding: 10px; border-radius: 8px; background: var(--soft); color: var(--muted); text-align: center; font-size: 12px; }
+    .import-preview h4 { margin: 0 0 8px; font-size: 16px; }
+    .import-preview ul { margin: 0 0 12px; padding-left: 19px; color: var(--muted); font-size: 13px; }
+    .import-preview-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .import-category-field { flex: 1 1 150px; }
+    .affiliate-preview-link { color: var(--brand); font-size: 13px; font-weight: 700; }
+    .import-disclosure { margin-top: 12px !important; font-size: 11px !important; }
     input[type="search"] { flex: 1 1 240px; width: 100%; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); font: inherit; font-size: 14px; outline-offset: 2px; }
     .filters { display: flex; gap: 7px; flex-wrap: wrap; }
     .filter { border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 99px; padding: 8px 12px; cursor: pointer; font: inherit; font-size: 13px; }
@@ -77,7 +100,7 @@
     footer a { text-decoration: none; }
     [hidden] { display: none !important; }
     @media (max-width: 760px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .product-image { height: 165px; } .guides { grid-template-columns: 1fr; } }
-    @media (max-width: 520px) { .container { width: min(100% - 26px, 1060px); } .nav { min-height: 60px; } nav { gap: 12px; } nav a { font-size: 12px; } .hero { padding: 42px 0 25px; } h1 { letter-spacing: -1.6px; } .grid { grid-template-columns: 1fr; } .product-image { height: 210px; } .section-heading { display: block; } }
+    @media (max-width: 520px) { .container { width: min(100% - 26px, 1060px); } .nav { min-height: 60px; } nav { gap: 12px; } nav a { font-size: 12px; } .hero { padding: 42px 0 25px; } h1 { letter-spacing: -1.6px; } .grid { grid-template-columns: 1fr; } .product-image { height: 210px; } .section-heading { display: block; } .import-preview { grid-template-columns: 82px minmax(0, 1fr); gap: 12px; } .import-preview-image, .import-image-missing { width: 82px; min-height: 82px; height: 82px; } }
   </style>
 </head>
 <body>
@@ -104,6 +127,36 @@
         <div class="section-heading">
           <div><h2>Product collection</h2><p class="subtext">A changing collection of things worth exploring.</p></div>
         </div>
+        <section class="import-panel" aria-labelledby="importHeading">
+          <h3 id="importHeading">Import an Amazon.in product</h3>
+          <p>Paste a full product page URL to fetch its current title, image, and features from Amazon.</p>
+          <form class="import-form" id="importForm">
+            <div class="import-field">
+              <label for="amazonProductUrl">Amazon.in product URL</label>
+              <input id="amazonProductUrl" name="url" type="url" placeholder="https://www.amazon.in/dp/B0XXXXXXXX" autocomplete="url" required>
+            </div>
+            <button class="import-button" id="importButton" type="submit">Fetch product</button>
+          </form>
+          <p class="import-status" id="importStatus" role="status" aria-live="polite"></p>
+          <article class="import-preview" id="importPreview" aria-labelledby="previewTitle" hidden>
+            <img class="import-preview-image" id="previewImage" alt="" hidden>
+            <div class="import-image-missing" id="previewImageMissing" hidden>Amazon did not provide a primary image.</div>
+            <div>
+              <h4 id="previewTitle"></h4>
+              <ul id="previewFeatures"></ul>
+              <div class="import-preview-actions">
+                <label class="import-field import-category-field" for="importCategory">
+                  <span>Collection category</span>
+                  <input id="importCategory" type="text" maxlength="40" value="Other">
+                </label>
+                <a class="affiliate-preview-link" id="previewAffiliateLink" target="_blank" rel="sponsored nofollow noopener noreferrer">View on Amazon.in (paid link)</a>
+                <button class="import-button" id="saveImportedProduct" type="button">Add product</button>
+                <button class="import-secondary" id="cancelImport" type="button">Cancel</button>
+              </div>
+            </div>
+          </article>
+          <p class="import-disclosure">Imported Amazon content is saved in this browser for up to 24 hours and is not published for other visitors. This site may earn from qualifying purchases.</p>
+        </section>
         <div class="tools">
           <input id="search" type="search" placeholder="Search products..." aria-label="Search products">
           <div class="filters" id="filters" aria-label="Filter by category">
@@ -148,6 +201,9 @@
   </footer>
 
   <script>
+    const IMPORT_API_URL = "";
+    const IMPORT_CACHE_KEY = "amazon-products-imported-v1";
+    const AMAZON_CONTENT_TTL_MS = 24 * 60 * 60 * 1000;
     /*
       HOW TO ADD A PRODUCT:
       1. Copy one product object below.
@@ -159,13 +215,13 @@
     */
     const products = [
       {
-        id: "sample-earbuds",
-        name: "Example: Wireless Earbuds",
-        category: "Tech",
-        description: "Replace this sample with your own short, honest product description.",
-        price: "",
+        id: "Desk lamps for study table",
+        name: "Cute bunny lamp",
+        category: "study lamps",
+        description: "🐰✨ A LITTLE BUNNY, A BIG GLOW!",
+        price: "289/-",
         image: "",
-        url: ""
+        url: "https://amzn.in/d/006YE2UG"
       },
       {
         id: "sample-desk-lamp",
@@ -190,7 +246,85 @@
     const grid = document.getElementById("productGrid");
     const searchInput = document.getElementById("search");
     const filters = document.getElementById("filters");
+    const importForm = document.getElementById("importForm");
+    const importButton = document.getElementById("importButton");
+    const importStatus = document.getElementById("importStatus");
+    const importPreview = document.getElementById("importPreview");
+    const importCategory = document.getElementById("importCategory");
+    const saveImportedProduct = document.getElementById("saveImportedProduct");
+    let pendingImport = null;
     let activeCategory = "All";
+    let importedExpirationTimer = null;
+
+    function setImportStatus(message, state = "") {
+      importStatus.textContent = message;
+      importStatus.dataset.state = state;
+    }
+
+    function isSafeAmazonImage(value) {
+      try {
+        const imageUrl = new URL(value);
+        return imageUrl.protocol === "https:" && imageUrl.hostname === "m.media-amazon.com";
+      } catch {
+        return false;
+      }
+    }
+
+    function isSafeAmazonProductUrl(value) {
+      try {
+        const productUrl = new URL(value);
+        return productUrl.protocol === "https:" && ["amazon.in", "www.amazon.in"].includes(productUrl.hostname);
+      } catch {
+        return false;
+      }
+    }
+
+    function getAmazonAsinFromUrl(value) {
+      try {
+        const productUrl = new URL(value);
+        if (!["amazon.in", "www.amazon.in"].includes(productUrl.hostname)) return "";
+        const match = productUrl.pathname.match(/^\/(?:dp|gp\/product|gp\/aw\/d)\/([a-z0-9]{10})(?:\/|$)/i);
+        return match ? match[1].toUpperCase() : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function removeExpiredImports() {
+      let savedImports = [];
+      try {
+        const stored = JSON.parse(localStorage.getItem(IMPORT_CACHE_KEY) || "[]");
+        if (Array.isArray(stored)) {
+          savedImports = stored.filter(entry =>
+            entry && Number.isFinite(entry.expiresAt) && entry.expiresAt > Date.now() &&
+            entry.product && typeof entry.product.id === "string" &&
+            typeof entry.product.name === "string" &&
+            (entry.product.image === null || isSafeAmazonImage(entry.product.image)) &&
+            isSafeAmazonProductUrl(entry.product.url)
+          );
+        }
+        localStorage.setItem(IMPORT_CACHE_KEY, JSON.stringify(savedImports));
+      } catch {
+        setImportStatus("Browser storage is unavailable. You can still import and add a product until this page is closed.", "error");
+        return;
+      }
+
+      for (let index = products.length - 1; index >= 0; index -= 1) {
+        if (String(products[index].id).startsWith("imported-")) products.splice(index, 1);
+      }
+      savedImports.forEach(entry => products.push(entry.product));
+
+      if (importedExpirationTimer) clearTimeout(importedExpirationTimer);
+      if (savedImports.length) {
+        const nextExpiration = Math.min(...savedImports.map(entry => entry.expiresAt));
+        importedExpirationTimer = setTimeout(() => {
+          removeExpiredImports();
+          refreshCategoryFilters();
+          renderProducts();
+          setImportStatus("An imported product expired after 24 hours. Import it again to refresh its Amazon content.");
+        }, Math.min(nextExpiration - Date.now() + 50, 2_147_000_000));
+      }
+    }
 
     function safeText(value) {
       return String(value ?? "");
@@ -247,8 +381,11 @@
         link.href = product.url;
         link.target = "_blank";
         link.rel = "sponsored nofollow noopener noreferrer";
-        link.textContent = "View product ↗";
-        link.setAttribute("aria-label", "View " + safeText(product.name));
+        const importedProduct = String(product.id).startsWith("imported-");
+        link.textContent = importedProduct ? "View on Amazon.in (paid link) ↗" : "View product ↗";
+        link.setAttribute("aria-label", importedProduct
+          ? "View " + safeText(product.name) + " on Amazon.in (paid link)"
+          : "View " + safeText(product.name));
       } else {
         link.href = "#products";
         link.textContent = "Link coming soon";
@@ -296,6 +433,161 @@
       matching.forEach(product => grid.appendChild(makeProductCard(product)));
     }
 
+    function showImportPreview(product) {
+      pendingImport = product;
+      document.getElementById("previewTitle").textContent = product.title;
+      const image = document.getElementById("previewImage");
+      const missingImage = document.getElementById("previewImageMissing");
+      image.hidden = !product.image;
+      missingImage.hidden = Boolean(product.image);
+      image.onerror = () => {
+        image.hidden = true;
+        missingImage.hidden = false;
+        missingImage.textContent = "Amazon's primary image could not be loaded.";
+        setImportStatus("Amazon's primary image could not be loaded. You can still review and add this product without an image.");
+      };
+      if (product.image) {
+        image.src = product.image;
+        image.alt = product.title;
+      } else {
+        image.removeAttribute("src");
+        image.alt = "";
+        missingImage.textContent = "Amazon did not provide a primary image.";
+      }
+      const featureList = document.getElementById("previewFeatures");
+      featureList.replaceChildren();
+      product.features.forEach(feature => {
+        const item = document.createElement("li");
+        item.textContent = feature;
+        featureList.appendChild(item);
+      });
+      if (!product.features.length) {
+        const item = document.createElement("li");
+        item.textContent = "No product features were returned.";
+        featureList.appendChild(item);
+      }
+      const affiliateLink = document.getElementById("previewAffiliateLink");
+      affiliateLink.href = product.detailPageURL;
+      importPreview.hidden = false;
+      setImportStatus(product.image
+        ? "Product preview is ready. Review it before adding the product."
+        : "Product details are ready, but Amazon did not provide a primary image. You can still review and add it without an image.");
+    }
+
+    importForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      importPreview.hidden = true;
+      pendingImport = null;
+      const productUrl = document.getElementById("amazonProductUrl").value.trim();
+      if (!/^https:\/\/(?:www\.|m\.)?amazon\.in\//i.test(productUrl)) {
+        setImportStatus("Enter a full HTTPS Amazon.in product page URL. Short links and other Amazon marketplaces are not supported.", "error");
+        return;
+      }
+      let apiOrigin;
+      try {
+        apiOrigin = new URL(IMPORT_API_URL);
+      } catch {
+        setImportStatus("Product importing is not configured yet. Set IMPORT_API_URL to your deployed backend's HTTPS origin in index.html.", "error");
+        return;
+      }
+      const isLocalBackend = apiOrigin.protocol === "http:" &&
+        ["localhost", "127.0.0.1", "[::1]"].includes(apiOrigin.hostname);
+      if ((apiOrigin.protocol !== "https:" && !isLocalBackend) ||
+          apiOrigin.pathname !== "/" || apiOrigin.search || apiOrigin.hash) {
+        setImportStatus("The backend URL must be an HTTPS origin, or a loopback HTTP URL for local testing, without a path.", "error");
+        return;
+      }
+
+      importButton.disabled = true;
+      importButton.textContent = "Fetching...";
+      setImportStatus("Looking up this product with Amazon...");
+      try {
+        const response = await fetch(`${apiOrigin.origin}/api/import-product`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: productUrl }),
+          signal: AbortSignal.timeout(15_000)
+        });
+        let result;
+        try {
+          result = await response.json();
+        } catch {
+          throw new Error("The import service returned an unreadable response.");
+        }
+        if (!response.ok) {
+          throw new Error(result.error?.message || "The product could not be imported. Please try again.");
+        }
+        const product = result.product;
+        if (!product || typeof product.title !== "string" ||
+            (product.image !== null && !isSafeAmazonImage(product.image)) ||
+            !isSafeAmazonProductUrl(product.detailPageURL) ||
+            !Array.isArray(product.features) ||
+            !/^[A-Z0-9]{10}$/i.test(product.asin)) {
+          throw new Error("The import service returned incomplete product details.");
+        }
+        showImportPreview(product);
+      } catch (error) {
+        setImportStatus(error.name === "TimeoutError"
+          ? "The product lookup timed out. Please try again."
+          : error.message || "The product could not be imported. Check the backend and try again.", "error");
+      } finally {
+        importButton.disabled = false;
+        importButton.textContent = "Fetch product";
+      }
+    });
+
+    saveImportedProduct.addEventListener("click", () => {
+      if (!pendingImport) return;
+      const category = importCategory.value.trim().slice(0, 40);
+      if (!category) {
+        setImportStatus("Enter a category before saving this product.", "error");
+        importCategory.focus();
+        return;
+      }
+
+      const savedProduct = {
+        id: `imported-${pendingImport.asin}`,
+        name: pendingImport.title,
+        category,
+        description: pendingImport.features.join(" • "),
+        price: "",
+        image: pendingImport.image,
+        url: pendingImport.detailPageURL
+      };
+      if (products.some(product =>
+        product.id === savedProduct.id || getAmazonAsinFromUrl(product.url) === pendingImport.asin
+      )) {
+        setImportStatus("This ASIN is already in your product catalog. The existing product was left unchanged.", "error");
+        return;
+      }
+      products.push(savedProduct);
+
+      try {
+        const currentImports = JSON.parse(localStorage.getItem(IMPORT_CACHE_KEY) || "[]");
+        const savedImports = (Array.isArray(currentImports) ? currentImports : [])
+          .filter(entry => entry && entry.expiresAt > Date.now() && entry.product?.id !== savedProduct.id);
+        savedImports.push({
+          expiresAt: Date.now() + AMAZON_CONTENT_TTL_MS,
+          product: savedProduct
+        });
+        localStorage.setItem(IMPORT_CACHE_KEY, JSON.stringify(savedImports));
+        removeExpiredImports();
+        setImportStatus("Product added to this browser's catalog for up to 24 hours. It is not published for other visitors.");
+      } catch {
+        setImportStatus("Product added for this page session, but browser storage failed; it will not remain after you close or reload this page.", "error");
+      }
+      importPreview.hidden = true;
+      pendingImport = null;
+      refreshCategoryFilters();
+      renderProducts();
+    });
+
+    document.getElementById("cancelImport").addEventListener("click", () => {
+      pendingImport = null;
+      importPreview.hidden = true;
+      setImportStatus("Import preview cancelled.");
+    });
+
     filters.addEventListener("click", event => {
       const button = event.target.closest("button[data-category]");
       if (!button) return;
@@ -306,6 +598,7 @@
     searchInput.addEventListener("input", renderProducts);
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    removeExpiredImports();
     refreshCategoryFilters();
     renderProducts();
   </script>
