@@ -2,7 +2,7 @@
 
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
-const { createCreatorsClient, createServer, getConfig, parseAmazonIndiaAsin } = require("./server");
+const { createCreatorsClient, createServer, getConfig, parseAmazonIndiaAsin, parsePort } = require("./server");
 
 const env = {
   CREATORS_API_CREDENTIAL_ID: "test-id",
@@ -72,7 +72,17 @@ test("requires backend credentials and a documented Creators API v3 version", ()
   assert.throws(() => getConfig({ ...env, CREATORS_API_CREDENTIAL_VERSION: "3.9" }), /3\.1, 3\.2, or 3\.3/);
   assert.throws(() => getConfig({ ...env, FRONTEND_ORIGIN: "http://192.168.1.20:5500" }), /https origin or an http loopback/);
   assert.equal(getConfig({ ...env, FRONTEND_ORIGIN: "http://127.0.0.1:5500" }).frontendOrigin, "http://127.0.0.1:5500");
-  assert.equal(getConfig(env).credentialVersion, "3.2");
+  for (const version of ["3.1", "3.2", "3.3"]) {
+    assert.equal(getConfig({ ...env, CREATORS_API_CREDENTIAL_VERSION: version }).credentialVersion, version);
+  }
+});
+
+test("uses valid host-provided ports and rejects malformed values", () => {
+  assert.equal(parsePort("10000"), 10000);
+  assert.equal(parsePort(undefined), 3000);
+  assert.throws(() => parsePort("10000invalid"), /PORT must be a valid TCP port/);
+  assert.throws(() => parsePort("0"), /PORT must be a valid TCP port/);
+  assert.throws(() => parsePort("65536"), /PORT must be a valid TCP port/);
 });
 
 test("uses the official SDK GetItems operation for Amazon India", async () => {

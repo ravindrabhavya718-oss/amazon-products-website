@@ -67,15 +67,38 @@ Imported Amazon content is saved in the visitor's browser for up to 24 hours and
 
 ## Deploy the backend separately
 
-For example, create a Render Web Service connected to this repository:
+### Render deployment steps
 
-1. Set the service root directory to `backend`.
-2. Use Node.js 20.12 or newer.
-3. Set the build command to `npm run build:sdk && npm test`.
-4. Set the start command to `npm start`.
-5. Enter the credential ID, credential secret, credential version, Partner Tag, and `FRONTEND_ORIGIN` in the hosting provider's **backend service environment variables**. Do not add credentials as GitHub Pages settings or frontend build variables.
-6. Deploy the backend yourself, then confirm `https://YOUR-BACKEND-HOST/health` returns `{"status":"ok"}`.
-7. Set `IMPORT_API_URL` in `index.html` to `https://YOUR-BACKEND-HOST` and publish the frontend yourself when ready.
+1. Sign in to Render and choose **New + → Web Service**.
+2. Connect the GitHub repository `ravindrabhavya718-oss/amazon-products-website` and select the `main` branch.
+3. Set **Root Directory** to `backend`.
+4. Set **Runtime** to Node and use Node.js 20.12 or newer.
+5. Set **Build Command** to `npm run build:sdk && npm test`.
+6. Set **Start Command** to `npm start`.
+7. Add these environment variables in Render's service settings. Enter real credentials only in Render:
+   - `CREATORS_API_CREDENTIAL_ID`
+   - `CREATORS_API_CREDENTIAL_SECRET`
+   - `CREATORS_API_CREDENTIAL_VERSION` — use the exact version Amazon assigned; this backend accepts `3.1`, `3.2`, or `3.3`.
+   - `AMAZON_PARTNER_TAG` — your approved Amazon.in Partner Tag.
+   - `FRONTEND_ORIGIN` = `https://ravindrabhavya718-oss.github.io`
+   - `PORT` is assigned by Render; do not hard-code a value for the hosted service.
+8. Create the service and wait for its deployment to complete. Render will show a generated public hostname, for example `https://<your-render-service>.onrender.com`. The actual hostname is assigned by Render and cannot be determined in advance.
+9. Open `https://<your-render-service>.onrender.com/health`, replacing the example hostname with the exact one Render assigned. Continue only when the response is `{"status":"ok"}`.
+10. In the repository's `index.html`, set `IMPORT_API_URL` to that hostname's HTTPS origin only (no `/api/import-product` suffix, path, or trailing slash). The frontend appends `/api/import-product` itself.
+11. Test the importer on GitHub Pages. A successful health check confirms the service is running, but does not prove Amazon credentials or product lookups work; verify an actual import before saying the integration is fully working.
+
+### Publish the frontend change
+
+After setting `IMPORT_API_URL` to the actual Render hostname:
+
+1. Open the repository in VS Code and open **Terminal → New Terminal**.
+2. Check the pending change with `git status`.
+3. Stage the frontend file with `git add index.html`.
+4. Commit it with `git commit -m "Connect product importer to backend"`.
+5. Push it with `git push origin main`.
+6. Wait for the GitHub Pages deployment to finish, then reload `https://ravindrabhavya718-oss.github.io/amazon-products/` and test a real Amazon.in product URL.
+
+Do not replace the empty `IMPORT_API_URL` with an example hostname. Until Render creates the service, its exact HTTPS URL is unknown.
 
 CORS permits the configured GitHub Pages origin only, the endpoint validates the posted URL, limits requests, bounds the body size, and avoids logging upstream error details. CORS is not authentication; keep this service scoped to your expected traffic and use provider-level rate limiting if the service becomes public at scale.
 

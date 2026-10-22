@@ -83,6 +83,14 @@ function getConfig(env) {
   };
 }
 
+function parsePort(value) {
+  const port = Number(value || "3000");
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error("PORT must be a valid TCP port.");
+  }
+  return port;
+}
+
 function createCreatorsClient(config, sdk = require("./vendor/creatorsapi-nodejs-sdk/dist")) {
   const apiClient = new sdk.ApiClient();
   apiClient.credentialId = config.credentialId;
@@ -267,24 +275,20 @@ function createServer({ config, creatorsClient, now = Date.now } = {}) {
 
 if (require.main === module) {
   let config;
+  let port;
   try {
     config = getConfig(process.env);
+    port = parsePort(process.env.PORT);
   } catch (error) {
     console.error(error.message);
     process.exitCode = 1;
   }
 
-  if (config) {
-    const port = Number.parseInt(process.env.PORT || "3000", 10);
-    if (!Number.isInteger(port) || port < 1 || port > 65535) {
-      console.error("PORT must be a valid TCP port.");
-      process.exitCode = 1;
-    } else {
-      createServer({ config }).listen(port, () => {
-        console.log(`Creators API backend listening on port ${port}.`);
-      });
-    }
+  if (config && port) {
+    createServer({ config }).listen(port, "0.0.0.0", () => {
+      console.log(`Creators API backend listening on port ${port}.`);
+    });
   }
 }
 
-module.exports = { createCreatorsClient, createServer, getConfig, parseAmazonIndiaAsin };
+module.exports = { createCreatorsClient, createServer, getConfig, parseAmazonIndiaAsin, parsePort };
